@@ -1,1 +1,1 @@
-export { DbCatalogRepository } from "./db-catalog-repository";
+export { DbCatalogFacade } from "./db-catalog-facade";

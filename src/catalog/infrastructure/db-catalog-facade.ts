@@ -1,7 +1,7 @@
 import { PrismaClient, Product } from "@prisma/client";
-import { CatalogInfrastructure, CreateProduct } from "../model";
+import { CatalogRepository, CreateProduct } from "../model";
 
-export class DbCatalogRepository implements CatalogInfrastructure {
+export class DbCatalogFacade implements CatalogRepository {
   constructor(private readonly prisma: PrismaClient) {}
 
   public getProducts(): Promise<Product[]> {

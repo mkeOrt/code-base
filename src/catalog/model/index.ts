@@ -1,2 +1,2 @@
-export { CatalogInfrastructure } from "./catalog-infrastructure";
+export { CatalogRepository } from "./catalog-repository";
 export { CreateProduct } from "./create-product";

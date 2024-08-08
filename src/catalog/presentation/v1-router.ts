@@ -1,10 +1,10 @@
 import { FastifyInstance } from "fastify";
 import { ProductCreator, ProductsFetcher } from "../application";
-import { DbCatalogRepository } from "../infrastructure";
+import { DbCatalogFacade } from "../infrastructure";
 import { Opts } from "../../server/model";
 
 export default function (router: FastifyInstance, opts: Opts, done: Function) {
-  const catalogInfrastructure = new DbCatalogRepository(opts.prisma);
+  const catalogInfrastructure = new DbCatalogFacade(opts.prisma);
 
   router.get("/", async (request, reply) => {
     const productsFetcher = new ProductsFetcher(catalogInfrastructure);

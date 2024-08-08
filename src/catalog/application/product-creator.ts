@@ -1,8 +1,8 @@
 import { Product } from "@prisma/client";
-import { CatalogInfrastructure, CreateProduct } from "../model";
+import { CatalogRepository, CreateProduct } from "../model";
 
 export class ProductCreator {
-  constructor(private catalogInfrastructure: CatalogInfrastructure) {}
+  constructor(private catalogInfrastructure: CatalogRepository) {}
 
   async createProduct(data: unknown): Promise<Product> {
     const createProduct = data as CreateProduct;
