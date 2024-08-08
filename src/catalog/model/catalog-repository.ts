@@ -1,7 +1,7 @@
 import { Product } from "@prisma/client";
-import { CreateProduct } from "./dto";
+import { CreateProductType } from "./value-objects";
 
 export interface CatalogRepository {
   getProducts(): Promise<Product[]>;
-  createProduct(product: CreateProduct): Promise<Product>;
+  createProduct(product: CreateProductType): Promise<Product>;
 }

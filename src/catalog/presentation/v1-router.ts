@@ -17,10 +17,31 @@ export default function (router: FastifyInstance, opts: Opts, done: Function) {
 
   router.post("/", async (request, reply) => {
     const productCreator = new ProductCreator(catalogInfrastructure);
-    const product = await productCreator.createProduct(request.body);
-    return {
-      item: product,
-    };
+
+    try {
+      const product = await productCreator.exec(request.body);
+      return {
+        item: product,
+      };
+    } catch (error: any) {
+      switch (error.name) {
+        case "InvalidCreateProductError":
+          router.log.error(error.toJSON());
+          reply.status(400).send(error.toJSON());
+          return;
+        case "PrismaUniqueConstraintError":
+          router.log.error(error.toJSON());
+          reply.status(409).send(error.toJSON());
+          return;
+        default:
+          router.log.error(error);
+          reply.status(500).send({
+            error: "internal server error",
+            message: "unexpected error occurred",
+          });
+          return;
+      }
+    }
   });
 
   done();
