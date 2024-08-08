@@ -2,7 +2,7 @@ import { PrismaClient, Product } from "@prisma/client";
 import { CatalogRepository, CreateProductType } from "../model";
 import {
   PRISMA_ERROR_CODES,
-  PrismaUniqueConstraintError,
+  DBUniqueConstraintError,
 } from "../../database/model";
 
 export class DbCatalogFacade implements CatalogRepository {
@@ -25,7 +25,7 @@ export class DbCatalogFacade implements CatalogRepository {
       return createdProduct;
     } catch (error: any) {
       if (error.code === PRISMA_ERROR_CODES.UNIQUE_CONSTRAINT) {
-        throw new PrismaUniqueConstraintError(
+        throw new DBUniqueConstraintError(
           "a product with the same identifier already exists in the database. Please use a unique identifier.",
           `fields: ${error.meta.target}`
         );

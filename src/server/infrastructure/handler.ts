@@ -4,6 +4,8 @@ import fastify, {
   FastifyReply,
   FastifyRequest,
 } from "fastify";
+import { InvalidCreateProductError } from "../../catalog/model";
+import { DBUniqueConstraintError } from "../../database/model";
 
 export function createErrorHandler(fastify: FastifyInstance) {
   return function errorHandler(
@@ -11,23 +13,22 @@ export function createErrorHandler(fastify: FastifyInstance) {
     request: FastifyRequest,
     reply: FastifyReply
   ) {
-    switch (error.name) {
-      case "InvalidCreateProductError":
-        fastify.log.error(error.toJSON());
-        reply.status(400).send(error.toJSON());
-        return;
-      case "PrismaUniqueConstraintError":
-        fastify.log.error(error.toJSON());
-        reply.status(409).send(error.toJSON());
-        return;
-      default:
-        fastify.log.error(error);
-        reply.status(500).send({
-          error: "internal server error",
-          message: "unexpected error occurred",
-        });
-        return;
+    if ("toJSON" in error) {
+      fastify.log.error(error.toJSON());
+    } else {
+      fastify.log.error(error);
     }
+
+    if (error instanceof InvalidCreateProductError) {
+      return reply.status(400).send(error.toJSON());
+    } else if (error instanceof DBUniqueConstraintError) {
+      return reply.status(409).send(error.toJSON());
+    }
+
+    reply.status(500).send({
+      error: "internal server error",
+      message: "unexpected error occurred",
+    });
   };
 }
 

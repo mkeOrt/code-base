@@ -19,7 +19,7 @@ export class ProductCreator {
         JSON.parse(error.message)
       );
     }
-    console.log("si pasa");
+
     return this.catalogInfrastructure.createProduct(product);
   }
 }
