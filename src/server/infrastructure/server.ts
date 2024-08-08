@@ -1,5 +1,6 @@
 import fastify, { FastifyInstance } from "fastify";
 import { PrismaClient } from "@prisma/client";
+import { createErrorHandler } from "./handler";
 
 export class Server {
   private fastify: FastifyInstance;
@@ -23,6 +24,8 @@ export class Server {
     this.fastify.get("/healthcheck", (req, res) => {
       res.send({ message: "Success" });
     });
+
+    this.fastify.setErrorHandler(createErrorHandler(this.fastify));
 
     this.fastify.register(require("../../catalog/presentation/v1-router"), {
       prefix: "v1/catalog",
