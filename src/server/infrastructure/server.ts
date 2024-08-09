@@ -31,5 +31,10 @@ export class Server {
       prefix: "v1/catalog",
       prisma,
     });
+    
+    this.fastify.register(require("../../auth/presentation/v1-router"), {
+      prefix: "v1/auth",
+      prisma,
+    });
   }
 }
