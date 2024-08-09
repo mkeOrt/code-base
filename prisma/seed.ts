@@ -1,4 +1,6 @@
 import { PrismaClient } from "@prisma/client";
+import * as argon2 from "argon2";
+
 const prisma = new PrismaClient();
 async function main() {
   const playeraBen10 = await prisma.product.upsert({
@@ -29,7 +31,18 @@ async function main() {
     },
   });
 
-  console.log({ playeraBen10, playeraRonaldinho });
+  const hashed = await argon2.hash("123456789");
+
+  const yola = await prisma.user.upsert({
+    where: { username: "yola" },
+    update: {},
+    create: {
+      username: "yola",
+      password: hashed,
+    },
+  });
+
+  console.log({ playeraBen10, playeraRonaldinho, yola });
 }
 main()
   .then(async () => {

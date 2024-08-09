@@ -1,9 +1,11 @@
 import fastify, { FastifyInstance } from "fastify";
 import { PrismaClient } from "@prisma/client";
 import { createErrorHandler } from "./handler";
+import { Config } from "../../config/config";
 
 export class Server {
-  private fastify: FastifyInstance;
+  private readonly fastify: FastifyInstance;
+  private readonly config: Config = Config.getInstance();
 
   constructor(prisma: PrismaClient) {
     this.fastify = fastify({ logger: true });
@@ -13,7 +15,7 @@ export class Server {
 
   public async start() {
     try {
-      await this.fastify.listen({ port: 3000 });
+      await this.fastify.listen({ port: this.config.port });
     } catch (err) {
       this.fastify.log.error(err);
       process.exit(1);
@@ -31,7 +33,7 @@ export class Server {
       prefix: "v1/catalog",
       prisma,
     });
-    
+
     this.fastify.register(require("../../auth/presentation/v1-router"), {
       prefix: "v1/auth",
       prisma,

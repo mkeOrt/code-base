@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, User } from "@prisma/client";
 import {
   AuthRepository,
   CredentialsNotMatchError,
@@ -8,14 +8,10 @@ import {
 export class DbAuthFacade implements AuthRepository {
   constructor(private readonly prisma: PrismaClient) {}
 
-  public async logIn(logInCredentials: LogInCredentialsType): Promise<number> {
+  public async logIn(logInCredentials: LogInCredentialsType): Promise<User> {
     const user = await this.prisma.user.findUnique({
       where: {
         username: logInCredentials.username,
-        password: logInCredentials.password,
-      },
-      select: {
-        id: true,
       },
     });
 
@@ -25,6 +21,6 @@ export class DbAuthFacade implements AuthRepository {
       );
     }
 
-    return user.id;
+    return user;
   }
 }
